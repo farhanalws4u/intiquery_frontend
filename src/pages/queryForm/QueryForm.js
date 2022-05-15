@@ -28,7 +28,7 @@ function QueryForm() {
   };
 
   return (
-    <Box>
+    <Box sx={{ height: "100vh" }}>
       <Container maxWidth="md">
         <Typography
           sx={{ fontSize: "30px", fontFamily: "merriweather", marginTop: 5 }}

@@ -6,7 +6,7 @@ import {
   ButtonBase,
   Paper,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getQuestions } from "../../store/actions/questionActions";
@@ -15,6 +15,7 @@ import moment from "moment";
 function QuestionsList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const questions = useSelector((state) => state.questions.all);
   useEffect(() => {
     dispatch(getQuestions());
@@ -22,7 +23,13 @@ function QuestionsList() {
 
   return (
     <div>
-      <Container sx={{ marginTop: 2, paddingBottom: "100px" }}>
+      <Container
+        sx={{
+          marginTop: 2,
+          paddingBottom: "100px",
+          height: questions.length === 0 ? "100vh" : "fit-content",
+        }}
+      >
         <Grid
           item
           sx={{

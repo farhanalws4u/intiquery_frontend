@@ -26,6 +26,7 @@ export const registerUser = (userData) => async (dispatch) => {
       type: GET_ERRORS,
       payload: error.response.data,
     });
+    dispatch(setUserLoading(false));
   }
 };
 
@@ -61,9 +62,9 @@ export const loginUser = (userData) => async (dispatch) => {
   }
 };
 
-export const googleLogin = (object) => async (dispatch) => {
+export const googleLogin = (userData) => async (dispatch) => {
   try {
-    const { data } = await api.googleLogin(object.userData);
+    const { data } = await api.googleLogin(userData);
     const decoded = jwt_decode(data.token);
 
     localStorage.setItem("jwtToken", data.token);

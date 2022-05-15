@@ -12,15 +12,18 @@ import MuiAlert from "@material-ui/lab/Alert";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import useStyles from "./styles";
 import Input from "./Input";
-import Icon from "./icon";
+
 import { useNavigate } from "react-router-dom";
 import "./index.css";
-import { GoogleLogin } from "react-google-login";
+
 import jwt_decode from "jwt-decode";
 import { Box } from "@mui/system";
 import logo from "../../assets/images/logo.svg";
+import { auth } from "../../firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 export default function Login(props) {
+  const provider = new GoogleAuthProvider();
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -55,23 +58,24 @@ export default function Login(props) {
     props.loginUser(formData, navigate);
   };
 
-  const googleSuccess = (res) => {
-    const result = res?.profileObj;
-    const token = res?.tokenId;
-    console.log(result);
-    const decoded = jwt_decode(token);
-    console.log(decoded);
-    const userData = {
-      name: result.name,
-      email: result.email,
-      exp: decoded.exp,
-      iat: decoded.iat,
-    };
-    props.googleLogin({ userData, token: "Bearer " + token });
+  const handleGoogleLogin = async () => {
+    try {
+      const { user } = await signInWithPopup(auth, provider);
+      console.log(user);
+      // console.log("acceess token", jwt_decode(user.accessToken));
+      const userData = {
+        name: user.displayName,
+        email: user.email,
+        exp: user.stsTokenManager.expirationTime,
+        iat: user.metadata.createdAt,
+        photoUrl: user.photoURL,
+      };
+      console.log("userDAta", userData);
+      props.googleLogin(userData);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const googleError = () =>
-    alert("Google Sign In was unsuccessful. Try again later");
 
   return (
     <LoadingOverlayComp active={false}>
@@ -135,25 +139,21 @@ export default function Login(props) {
               Sign In
             </Button>
 
-            <GoogleLogin
-              clientId="202666916683-mmmigflct636va26l81p7ah425i284ed.apps.googleusercontent.com"
-              render={(renderProps) => (
-                <Button
-                  className={classes.googleButton}
-                  color="primary"
-                  fullWidth
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  startIcon={<Icon />}
-                  variant="contained"
-                >
-                  Google Sign In
-                </Button>
-              )}
-              onSuccess={googleSuccess}
-              onFailure={googleError}
-              cookiePolicy="single_host_origin"
-            />
+            <Button
+              onClick={handleGoogleLogin}
+              variant="outlined"
+              color="primary"
+              fullWidth
+            >
+              <img
+                width="20px"
+                height="20px"
+                src="https://img.icons8.com/color/48/000000/google-logo.png"
+                alt="G"
+              />
+              &nbsp; Google Login
+            </Button>
+
             <Grid container justify="center">
               <Grid item>
                 <Button

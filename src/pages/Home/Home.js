@@ -9,6 +9,7 @@ function Home(props) {
     <Box>
       <Header />
       <QuestionsList />
+
       <Footer />
     </Box>
   );

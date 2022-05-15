@@ -1,4 +1,8 @@
-import { SET_CURRENT_USER, USER_LOADING } from "../../constants/actionTypes";
+import {
+  SET_CURRENT_USER,
+  UPDATE_USER,
+  USER_LOADING,
+} from "../../constants/actionTypes";
 
 import isEmpty from "is-empty";
 
@@ -8,7 +12,7 @@ const initialState = {
   loading: false,
 };
 
-export default function (state = initialState, action) {
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_CURRENT_USER:
       return {
@@ -16,7 +20,7 @@ export default function (state = initialState, action) {
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
       };
-      break;
+
     case USER_LOADING:
       return {
         ...state,
@@ -25,6 +29,6 @@ export default function (state = initialState, action) {
 
     default:
       return state;
-      break;
   }
-}
+};
+export default authReducer;

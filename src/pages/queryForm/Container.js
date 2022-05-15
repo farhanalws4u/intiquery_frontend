@@ -6,12 +6,10 @@ import { Box } from "@mui/system";
 
 function Container() {
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div>
       <Header />
       <QueryForm />
-      <Box sx={{ position: "absolute", bottom: 0, width: "100%" }}>
-        <Footer />
-      </Box>
+      <Footer />
     </div>
   );
 }

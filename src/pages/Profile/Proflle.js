@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import { Box } from "@mui/system";
 import {
   Avatar,
@@ -8,6 +7,7 @@ import {
   ButtonBase,
   Container,
   Grid,
+  Link,
   Paper,
   Typography,
 } from "@mui/material";
@@ -22,15 +22,260 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { addUserData } from "../../store/actions/userActions";
 
 function Proflle() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const questions = useSelector((state) => state.questions.all);
+  const user = useSelector((state) => state.auth.user);
+  const userData = useSelector((state) => state.userData);
+  const [open, setOpen] = useState(false);
+  const bio = useRef("");
+  const profilePicture = useRef("");
+  const facebookLink = useRef("");
+  const instagramLink = useRef("");
+  const whatsappLink = useRef("");
+  const linkedInLink = useRef("");
+  const telegramLink = useRef("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  function ImageUpload(e) {
+    if (e.target.files && e.target.files[0]) {
+      let reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+
+      reader.onload = function (e) {
+        profilePicture.current = e.target.result;
+      };
+    }
+  }
+  const prevImage = userData.photoUrl;
+
+  const handleFormSubmit = () => {
+    const userData = {
+      bio: bio.current,
+      photoUrl:
+        profilePicture.current === "" ? prevImage : profilePicture.current,
+      facebookLink: facebookLink.current,
+      instagramLink: instagramLink.current,
+      whatsappLink: whatsappLink.current,
+      linkedInLink: linkedInLink.current,
+      telegramLink: telegramLink.current,
+    };
+    dispatch(addUserData({ userData, userId: user.id }));
+    handleClose();
+  };
+
+  const DialogForm = () => {
+    return (
+      <Box sx={{ position: "absolute", top: -500, width: "500px" }}>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Edit Profile</DialogTitle>
+          <DialogContent
+            sx={{
+              width: { md: "400px", sm: "380px", xs: "350px" },
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <TextField
+              name="bio"
+              onChange={(e) => (bio.current = e.target.value)}
+              label="Enter Bio"
+              type="text"
+              variant="standard"
+              sx={{ maxWidth: "400px" }}
+              multiline
+            />
+            <label
+              style={{
+                marginTop: "20px",
+                marginBottom: "5px",
+                fontFamily: "merriweather",
+                fontSize: "15px",
+              }}
+            >
+              Upload Profile Picture
+            </label>
+            <TextField
+              onChange={ImageUpload}
+              name="profilePicture"
+              type="file"
+              variant="standard"
+            />
+            <label
+              style={{
+                marginTop: "20px",
+                marginBottom: "5px",
+                fontFamily: "merriweather",
+                fontSize: "18px",
+              }}
+            >
+              Enter Your social Links
+            </label>
+            <label
+              style={{
+                marginTop: "20px",
+                marginBottom: "5px",
+                fontFamily: "merriweather",
+                fontSize: "14px",
+              }}
+            >
+              Facebook
+            </label>
+            <TextField
+              onChange={(e) => (facebookLink.current = e.target.value)}
+              name="facebookLink"
+              label="username"
+              type="text"
+              inputProps={{
+                maxLength: 200,
+              }}
+              variant="standard"
+              sx={{ maxWidth: "400px" }}
+              multiline
+            />
+            <label
+              style={{
+                marginTop: "20px",
+                marginBottom: "5px",
+                fontFamily: "merriweather",
+                fontSize: "14px",
+              }}
+            >
+              Instagram
+            </label>
+            <TextField
+              onChange={(e) => (instagramLink.current = e.target.value)}
+              name="instagramLink"
+              label="username"
+              type="text"
+              inputProps={{
+                maxLength: 200,
+              }}
+              variant="standard"
+              sx={{ maxWidth: "400px" }}
+              multiline
+            />
+            <label
+              style={{
+                marginTop: "20px",
+                marginBottom: "5px",
+                fontFamily: "merriweather",
+                fontSize: "14px",
+              }}
+            >
+              WhatsApp
+            </label>
+            <TextField
+              onChange={(e) => (whatsappLink.current = e.target.value)}
+              name="whatsappLink"
+              label="Number"
+              type="text"
+              inputProps={{
+                maxLength: 200,
+              }}
+              variant="standard"
+              sx={{ maxWidth: "400px" }}
+              multiline
+            />
+            <label
+              style={{
+                marginTop: "20px",
+                marginBottom: "5px",
+                fontFamily: "merriweather",
+                fontSize: "14px",
+              }}
+            >
+              LinkedIn
+            </label>
+            <TextField
+              onChange={(e) => (linkedInLink.current = e.target.value)}
+              name="linkedInLink"
+              label="username"
+              type="text"
+              inputProps={{
+                maxLength: 200,
+              }}
+              variant="standard"
+              sx={{ maxWidth: "400px" }}
+              multiline
+            />
+            <label
+              style={{
+                marginTop: "20px",
+                marginBottom: "5px",
+                fontFamily: "merriweather",
+                fontSize: "14px",
+              }}
+            >
+              Telegram
+            </label>
+            <TextField
+              onChange={(e) => (telegramLink.current = e.target.value)}
+              name="telegramLink"
+              label="username"
+              type="link"
+              inputProps={{
+                maxLength: 200,
+              }}
+              variant="standard"
+              sx={{ maxWidth: "400px" }}
+              multiline
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              sx={{
+                fontFamily: "merriweather",
+                backgroundColor: "#EC6F66",
+
+                "&:hover": { backgroundColor: "#6E48AA" },
+                fontSize: "10px",
+              }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                fontFamily: "merriweather",
+                backgroundColor: "#6E48AA",
+
+                "&:hover": { backgroundColor: "#EC6F66" },
+                fontSize: "10px",
+              }}
+              onClick={handleFormSubmit}
+            >
+              Save Changes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    );
+  };
+
   return (
     <Box>
       <Header />
+      <DialogForm />
       <Container maxWidth="md" sx={{ marginTop: "20px" }}>
         <Paper
           variant="outlined"
@@ -50,7 +295,7 @@ function Proflle() {
               }}
             >
               <Avatar
-                src={me}
+                src={userData.photoUrl}
                 sx={{
                   width: "100px",
                   height: "100px",
@@ -83,7 +328,7 @@ function Proflle() {
                   marginLeft: { sm: "-20px", xs: 0 },
                 }}
               >
-                Farhan Khan
+                {user.name}
               </Typography>
               <Typography
                 sx={{
@@ -103,8 +348,7 @@ function Proflle() {
                   marginTop: "10px",
                 }}
               >
-                my name is farhan khan. i am a computer science student of
-                integral university. A javascript developer.
+                {userData.bio}
               </Typography>
             </Grid>
           </Grid>
@@ -123,27 +367,79 @@ function Proflle() {
                 justifyContent: "space-evenly",
               }}
             >
-              <ButtonBase>
-                <FacebookIcon style={{ fontSize: "35px", color: "#6E48AA" }} />
-              </ButtonBase>
-              <ButtonBase>
-                <InstagramIcon style={{ fontSize: "35px", color: "#6E48AA" }} />
-              </ButtonBase>
-              <ButtonBase>
-                <LinkedInIcon style={{ fontSize: "35px", color: "#6E48AA" }} />
-              </ButtonBase>
-              <ButtonBase>
-                <TelegramIcon style={{ fontSize: "35px", color: "#6E48AA" }} />
-              </ButtonBase>
-              <ButtonBase>
-                <WhatsAppIcon style={{ fontSize: "35px", color: "#6E48AA" }} />
-              </ButtonBase>
+              <Box
+                sx={{ display: user.facebookLink !== "" ? "block" : "none" }}
+              >
+                <Link
+                  href={`https://facebook.com/${userData.facebookLink}`}
+                  target="_blank"
+                >
+                  <FacebookIcon
+                    style={{ fontSize: "35px", color: "#6E48AA" }}
+                  />
+                </Link>
+              </Box>
+              <Box
+                sx={{
+                  display: userData.instagramLink !== "" ? "block" : "none",
+                }}
+              >
+                <Link
+                  href={`https://instagram.com/${userData.instagramLink}`}
+                  target="_blank"
+                >
+                  <InstagramIcon
+                    style={{ fontSize: "35px", color: "#6E48AA" }}
+                  />
+                </Link>
+              </Box>
+              <Box
+                sx={{
+                  display: userData.linkedInLink !== "" ? "block" : "none",
+                }}
+              >
+                <Link
+                  href={`https://www.linkedin.com/in/${userData.linkedInLink}`}
+                  target="_blank"
+                >
+                  <LinkedInIcon
+                    style={{ fontSize: "35px", color: "#6E48AA" }}
+                  />
+                </Link>
+              </Box>
+              <Box
+                sx={{
+                  display: userData.telegramLink !== "" ? "block" : "none",
+                }}
+              >
+                <Link
+                  href={`https://t.me/${userData.telegramLink}`}
+                  target="_blank"
+                >
+                  <TelegramIcon
+                    style={{ fontSize: "35px", color: "#6E48AA" }}
+                  />
+                </Link>
+              </Box>
+              <Box
+                sx={{
+                  display: userData.whatsappLink !== "" ? "block" : "none",
+                }}
+              >
+                <Link
+                  href={`https://wa.me/${userData.whatsappLink}`}
+                  target="_blank"
+                >
+                  <WhatsAppIcon
+                    style={{ fontSize: "35px", color: "#6E48AA" }}
+                  />
+                </Link>
+              </Box>
             </Grid>
           </Grid>
           <Grid sx={{ textAlign: "center", marginTop: "30px" }}>
             <Button
               variant="contained"
-              onClick={() => console.log("clicked...")}
               sx={{
                 fontFamily: "merriweather",
                 backgroundColor: "#6E48AA",
@@ -152,6 +448,7 @@ function Proflle() {
                 transform: "scale(0.8)",
                 marginLeft: { md: "-230px", sm: "-200px" },
               }}
+              onClick={handleClickOpen}
             >
               Edit Profile
             </Button>
@@ -263,39 +560,3 @@ function Proflle() {
 }
 
 export default Proflle;
-
-{
-  /* <div className="socialMediaLinksContainer d-flex-row">
-                {userDataObj?.socialLinks?.map((link) => {
-                  return (
-                    <a
-                      href={
-                        link.icon === whatsappSm
-                          ? `https://wa.me/${link.username}`
-                          : link.icon === telegramSm
-                          ? `https://t.me/${link.username}`
-                          : link.icon === facebookSm
-                          ? `https://facebook.com/${link.username}`
-                          : link.icon === pinterestSm
-                          ? `https://in.pinterest.com/${link.username}`
-                          : link.icon === spotifySm
-                          ? `https://open.spotify.com/user/${link.username}`
-                          : link.icon === linkedInSm
-                          ? `https://www.linkedin.com/in/${link.username}`
-                          : link.icon === instagramSm
-                          ? `https://instagram.com/${link.username}`
-                          : "#"
-                      }
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <img
-                        className="socialIconInView"
-                        src={link.icon}
-                        alt=""
-                      />
-                    </a>
-                  );
-                })}
-              </div> */
-}
