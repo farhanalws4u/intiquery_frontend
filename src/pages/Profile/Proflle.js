@@ -34,9 +34,21 @@ import { addUserData } from "../../store/actions/userActions";
 function Proflle() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const questions = useSelector((state) => state.questions.all);
+
   const user = useSelector((state) => state.auth.user);
+
   const userData = useSelector((state) => state.userData);
+
+  const answers = useSelector((state) => state.answers);
+
+  const userQuestions = questions.filter((ques) => ques.user._id === user.id);
+  console.log("userQuestions", userQuestions);
+
+  const userAnswers = answers.filter((ans) => ans.user.id === user.id);
+  console.log("userAnswers", userAnswers);
+
   const [open, setOpen] = useState(false);
   const bio = useRef("");
   const profilePicture = useRef("");
@@ -79,6 +91,11 @@ function Proflle() {
     };
     dispatch(addUserData({ userData, userId: user.id }));
     handleClose();
+  };
+
+  const checkNoOfAnswers = (id) => {
+    const filterAnswers = answers.filter((ans) => ans.questionId === id);
+    return filterAnswers.length;
   };
 
   const DialogForm = () => {
@@ -300,6 +317,7 @@ function Proflle() {
                   width: "100px",
                   height: "100px",
                   marginLeft: { sm: "40px", xs: 0 },
+                  objectFit: "cover",
                 }}
               />
             </Grid>
@@ -470,14 +488,18 @@ function Proflle() {
                   fontSize: { lg: 25, md: 25, sm: 22, xs: 20 },
                   fontFamily: "merriweather",
                   color: "#6E48AA",
+                  borderLeft: "5px solid #6e48aa",
+                  paddingLeft: "15px",
+                  borderTopLeftRadius: "5px",
+                  borderBottomLeftRadius: "5px",
                 }}
               >
-                Your Questions
+                Your Questions ({userQuestions.length})
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {questions.map((question) => {
-                const answersLength = question.answers.length;
+              {userQuestions.map((question) => {
+                const answersLength = checkNoOfAnswers(question._id);
 
                 return (
                   <ButtonBase
@@ -547,6 +569,68 @@ function Proflle() {
                           {moment(question.date).fromNow()}
                         </Typography>
                       </Grid>
+                    </Grid>
+                  </ButtonBase>
+                );
+              })}
+            </AccordionDetails>
+          </Accordion>
+        </div>
+
+        <div>
+          <Accordion sx={{ marginTop: "30px" }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  fontSize: { lg: 25, md: 25, sm: 22, xs: 20 },
+                  fontFamily: "merriweather",
+                  color: "#6E48AA",
+                  borderLeft: "5px solid #6e48aa",
+                  paddingLeft: "15px",
+                  borderTopLeftRadius: "5px",
+                  borderBottomLeftRadius: "5px",
+                }}
+              >
+                Your Answers ({userAnswers.length})
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {userAnswers.map((ans) => {
+                return (
+                  <ButtonBase
+                    onClick={() =>
+                      navigate(`/detailedQuestion/${ans.questionId}`)
+                    }
+                  >
+                    <Grid
+                      sx={{
+                        borderBottom: "1px solid #d1d0d0",
+                        padding: "10px",
+                        marginTop: 2,
+                        width: { lg: 800, md: 800, sm: "600px", xs: "340px" },
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontWeight: 500,
+                          display: "block",
+                          fontSize: { lg: 23, md: 23, sm: 20, xs: 18 },
+                          fontFamily: "merriweather",
+                          color: "#6E48AA",
+                          maxWidth: "700px",
+                          overflow: "hidden",
+                          whiteSpace: "pre-wrap",
+                          textAlign: "left",
+                          maxHeight: "500px",
+                        }}
+                      >
+                        {ans.answer}
+                      </Typography>
                     </Grid>
                   </ButtonBase>
                 );

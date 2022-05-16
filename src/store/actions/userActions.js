@@ -1,5 +1,5 @@
 import * as api from "../../api/userApi";
-import { ADD_USER_DATA } from "../../constants/actionTypes";
+import { ADD_USER_DATA, SET_USER_DATA } from "../../constants/actionTypes";
 import { setUserLoading } from "./authActions";
 
 export const addUserData = (newData) => async (dispatch) => {
@@ -16,5 +16,15 @@ export const addUserData = (newData) => async (dispatch) => {
     console.log(error);
 
     dispatch(setUserLoading(false));
+  }
+};
+
+export const getUserData = (id) => async (dispatch) => {
+  try {
+    const { data } = await api.getUserData(id);
+
+    dispatch({ type: SET_USER_DATA, payload: data });
+  } catch (error) {
+    console.log(error);
   }
 };

@@ -11,15 +11,29 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getQuestions } from "../../store/actions/questionActions";
 import moment from "moment";
+import { getAnswers } from "../../store/actions/questionActions";
+import { getUserData } from "../../store/actions/userActions";
 
 function QuestionsList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const questions = useSelector((state) => state.questions.all);
+
+  const user = useSelector((state) => state.auth.user);
+
   useEffect(() => {
     dispatch(getQuestions());
+    dispatch(getAnswers());
+    dispatch(getUserData({ id: user.id }));
   }, [dispatch]);
+
+  const answers = useSelector((state) => state.answers);
+
+  const checkNoOfAnswers = (id) => {
+    const filterAnswers = answers.filter((ans) => ans.questionId === id);
+    return filterAnswers.length;
+  };
 
   return (
     <div>
@@ -56,9 +70,9 @@ function QuestionsList() {
             onClick={() => navigate("/queryForm")}
             sx={{
               fontFamily: "merriweather",
-              backgroundColor: "#6E48AA",
+              backgroundColor: "#EC6F66",
 
-              "&:hover": { backgroundColor: "#EC6F66" },
+              "&:hover": { backgroundColor: "#6E48AA" },
             }}
             variant="contained"
           >
@@ -70,7 +84,7 @@ function QuestionsList() {
 
         <Container maxWidth="md" sx={{ marginTop: 2, textAlign: "center" }}>
           {questions.map((question) => {
-            const answersLength = question.answers.length;
+            const answersLength = checkNoOfAnswers(question._id);
 
             return (
               <ButtonBase

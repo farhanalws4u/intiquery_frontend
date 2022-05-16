@@ -9,13 +9,15 @@ import logo from "../../assets/images/logo.svg";
 import "./styles.css";
 import SearchBar from "material-ui-search-bar";
 import { Avatar, Button } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../store/actions/authActions";
 
 const ResponsiveAppBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = React.useState("");
+
+  const userData = useSelector((state) => state.userData);
 
   const handleSearch = () => {
     console.log("search value ", searchValue);
@@ -65,7 +67,7 @@ const ResponsiveAppBar = () => {
             }}
           >
             <IconButton onClick={() => navigate("/profile")}>
-              <Avatar className="userAvatar" src="" />
+              <Avatar className="userAvatar" src={userData.photoUrl} />
             </IconButton>
           </Tooltip>
           <Button

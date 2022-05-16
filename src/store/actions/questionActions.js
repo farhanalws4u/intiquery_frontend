@@ -3,6 +3,8 @@ import {
   GET_QUESTIONS,
   SET_CURRENT_QUESTION,
   UPDATE_QUESTION,
+  SUBMIT_ANSWER,
+  GET_ANSWERS,
 } from "../../constants/actionTypes";
 
 import * as api from "../../api/questionApi";
@@ -47,12 +49,27 @@ export const submitAnswer = (ansData) => async (dispatch) => {
   try {
     dispatch(setUserLoading(true));
     const { data } = await api.submitAnswer(ansData);
-    dispatch(updateQuestion(data));
+
+    dispatch({ type: SUBMIT_ANSWER, payload: data });
 
     dispatch(setUserLoading(false));
   } catch (error) {
     alert(error.message);
     dispatch(setUserLoading(false));
+  }
+};
+
+export const getAnswers = () => async (dispatch) => {
+  setUserLoading(true);
+  try {
+    const { data } = await api.getAnswers();
+
+    dispatch({ type: GET_ANSWERS, payload: data });
+
+    setUserLoading(false);
+  } catch (err) {
+    console.log(err.message);
+    setUserLoading(false);
   }
 };
 
