@@ -76,7 +76,7 @@ function Proflle() {
       };
     }
   }
-  const prevImage = userData.photoUrl;
+  const prevImage = userData?.photoUrl;
 
   const handleFormSubmit = () => {
     const userData = {
@@ -312,7 +312,7 @@ function Proflle() {
               }}
             >
               <Avatar
-                src={userData.photoUrl}
+                src={userData?.photoUrl}
                 sx={{
                   width: "100px",
                   height: "100px",
@@ -366,7 +366,7 @@ function Proflle() {
                   marginTop: "10px",
                 }}
               >
-                {userData.bio}
+                {userData?.bio}
               </Typography>
             </Grid>
           </Grid>
@@ -386,10 +386,12 @@ function Proflle() {
               }}
             >
               <Box
-                sx={{ display: user.facebookLink !== "" ? "block" : "none" }}
+                sx={{
+                  display: userData?.facebookLink !== "" ? "block" : "none",
+                }}
               >
                 <Link
-                  href={`https://facebook.com/${userData.facebookLink}`}
+                  href={`https://facebook.com/${userData?.facebookLink}`}
                   target="_blank"
                 >
                   <FacebookIcon
@@ -399,11 +401,11 @@ function Proflle() {
               </Box>
               <Box
                 sx={{
-                  display: userData.instagramLink !== "" ? "block" : "none",
+                  display: userData?.instagramLink !== "" ? "block" : "none",
                 }}
               >
                 <Link
-                  href={`https://instagram.com/${userData.instagramLink}`}
+                  href={`https://instagram.com/${userData?.instagramLink}`}
                   target="_blank"
                 >
                   <InstagramIcon
@@ -413,11 +415,11 @@ function Proflle() {
               </Box>
               <Box
                 sx={{
-                  display: userData.linkedInLink !== "" ? "block" : "none",
+                  display: userData?.linkedInLink !== "" ? "block" : "none",
                 }}
               >
                 <Link
-                  href={`https://www.linkedin.com/in/${userData.linkedInLink}`}
+                  href={`https://www.linkedin.com/in/${userData?.linkedInLink}`}
                   target="_blank"
                 >
                   <LinkedInIcon
@@ -427,11 +429,11 @@ function Proflle() {
               </Box>
               <Box
                 sx={{
-                  display: userData.telegramLink !== "" ? "block" : "none",
+                  display: userData?.telegramLink !== "" ? "block" : "none",
                 }}
               >
                 <Link
-                  href={`https://t.me/${userData.telegramLink}`}
+                  href={`https://t.me/${userData?.telegramLink}`}
                   target="_blank"
                 >
                   <TelegramIcon
@@ -441,11 +443,11 @@ function Proflle() {
               </Box>
               <Box
                 sx={{
-                  display: userData.whatsappLink !== "" ? "block" : "none",
+                  display: userData?.whatsappLink !== "" ? "block" : "none",
                 }}
               >
                 <Link
-                  href={`https://wa.me/${userData.whatsappLink}`}
+                  href={`https://wa.me/${userData?.whatsappLink}`}
                   target="_blank"
                 >
                   <WhatsAppIcon
