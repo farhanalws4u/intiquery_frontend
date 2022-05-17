@@ -67,7 +67,7 @@ const ResponsiveAppBar = () => {
             }}
           >
             <IconButton onClick={() => navigate("/profile")}>
-              <Avatar className="userAvatar" src={userData.photoUrl} />
+              <Avatar className="userAvatar" src={userData?.photoUrl} />
             </IconButton>
           </Tooltip>
           <Button
